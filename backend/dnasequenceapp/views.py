@@ -6,12 +6,12 @@ from django.views import View
 import json
 
 from Bio.SeqIO import parse
-from Bio import Align
+# from Bio import Align
 
 
-def get_alignment(target_sequence):
-    aligner = Align.PairwiseAligner()
-    return
+# def get_alignment(target_sequence):
+#     aligner = Align.PairwiseAligner()
+#     return
 
 
 def search_proteins(target_sequence):

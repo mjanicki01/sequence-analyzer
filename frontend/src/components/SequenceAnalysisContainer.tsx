@@ -1,15 +1,12 @@
 import React, { useState } from "react"
+import { Protein } from "../types"
 import axios from "axios"
 import SequenceForm from "./SequenceForm"
 import SequenceAnalysisResults from "./SequenceAnalysisResults"
 
-interface Protein {
-  name: string
-}
-
 const SequenceAnalysisContainer = () => {
   const [sequence, setSequence] = useState<string>("")
-  const [response, setResponse] = useState<Protein[] | string>([])
+  const [response, setResponse] = useState<Protein[]>([])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSequence(e.target.value)
@@ -23,10 +20,10 @@ const SequenceAnalysisContainer = () => {
         "http://localhost:8000/api/sequence-analysis/",
         { sequence }
       )
-      setResponse(res.data.result)
+      setResponse(JSON.parse(res.data.result.replace(/'/g, '"')))
     } catch (error) {
       console.error(error)
-      setResponse("Error!")
+      // return something to display to user
     }
   }
 

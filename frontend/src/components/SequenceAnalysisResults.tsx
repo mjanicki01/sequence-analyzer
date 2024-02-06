@@ -1,29 +1,27 @@
-interface Protein {
-  name: string
-}
+import { useEffect } from "react"
+import { Protein } from "../types"
 
 interface SequenceAnalysisResultsProps {
-  response: Protein[] | string
+  response: Protein[]
 }
 
 const SequenceAnalysisResults = ({
   response,
 }: SequenceAnalysisResultsProps) => {
+
+
+  useEffect(() => {
+    console.log(response)
+  }, [response])
+
+
   return (
     <div>
-      {typeof response === "string" ? (
-        <div>Response: {response}</div>
-      ) : (
-        <div>
-          Response:
-          <ul>
-            {Array.isArray(response) &&
-              response.map((protein, index) => (
-                <li key={index}>{protein.name}</li>
-              ))}
-          </ul>
-        </div>
-      )}
+      Response:
+      <ul>
+        {Array.isArray(response) &&
+          response.map((protein, index) => <li key={index}>{protein.name}</li>)}
+      </ul>
     </div>
   )
 }
