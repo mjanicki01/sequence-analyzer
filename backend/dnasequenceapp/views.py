@@ -6,6 +6,12 @@ from django.views import View
 import json
 
 from Bio.SeqIO import parse
+from Bio import Align
+
+
+def get_alignment(target_sequence):
+    aligner = Align.PairwiseAligner()
+    return
 
 
 def search_proteins(target_sequence):
@@ -14,7 +20,7 @@ def search_proteins(target_sequence):
 
     for record in parse(fasta_file, "fasta"):
         if target_sequence in str(record.seq):
-            matching_proteins.append(record)
+            matching_proteins.append({'name': " ".join(record.description.split(' ')[1:]), 'id': record.id,})
 
     return matching_proteins
 
@@ -29,10 +35,6 @@ class SequenceAnalysisViewset(View):
             try:
                 protein_result = search_proteins(input_sequence)
                 return JsonResponse({'result': str(protein_result)})
-                # return Response({
-                #     'match': match,
-                #     'alignment': alignment
-                # })
             
             except Exception as e:
                 return JsonResponse({'error': str(e)}, status=400)
