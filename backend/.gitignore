@@ -1,0 +1,17 @@
+# Environments
+venv/
+
+# SQLite
+*.sqlite3
+
+# Compiled Python bytecode
+*.py[cod]
+.tox
+__pycache__
+*.mo
+
+# Management Command TMP Files
+.tmp
+
+# Management Command Generated Files
+/static
