@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
@@ -5,8 +6,17 @@ from django.views import View
 
 import json
 
+from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authtoken.models import Token
+from .serializers import UserSerializer
+
 from Bio.SeqIO import parse
 # from Bio import Align
+
+
 
 
 # def get_alignment(target_sequence):
@@ -16,7 +26,7 @@ from Bio.SeqIO import parse
 
 def search_proteins(target_sequence):
     matching_proteins = []
-    fasta_file = "dnasequenceapp/proteins/collection.fasta"
+    fasta_file = "dnasequenceapp/protein-collection.fasta"
 
     for record in parse(fasta_file, "fasta"):
         if target_sequence in str(record.seq):
@@ -40,3 +50,26 @@ class SequenceAnalysisViewset(View):
                 return JsonResponse({'error': str(e)}, status=400)
             
         return JsonResponse({'error': 'Invalid Request'}, status=400)
+    
+
+
+class CreateUserViewset(APIView):
+
+    def post(self, request):
+        serializer = UserSerializer(data=request.data)
+
+        if serializer.is_valid():
+            user = serializer.save()
+            if user:
+                token = Token.objects.get_or_create(user=user)
+                return Response({'token': token}, status=status.HTTP_201_CREATED)
+            
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+class ExampleView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, format=None):
+        content = {'message': 'Hello, World!'}
+        return Response(content)
