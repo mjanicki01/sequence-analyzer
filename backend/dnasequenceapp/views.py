@@ -10,11 +10,35 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 
 from .serializers import UserSerializer
+from .models import SearchHistory
 
 from Bio.SeqIO import parse
+
+
+def match_protein_sequence(target_sequence, sequence_str):
+    match_positions = []
+    start_index = 0
+
+    while True:
+        # Find the target sequence starting from the current search position
+        start_index = sequence_str.find(target_sequence, start_index)
+
+        if start_index == -1:
+            break
+        else:
+            # Adjust for 1-based indexing
+            start_index_1_based = start_index + 1
+            end_index_1_based = start_index + len(
+                target_sequence
+            )  # No need to subtract 1 before appending
+            match_positions.append(f"{start_index_1_based} - {end_index_1_based}")
+            start_index += 1
+
+    return match_positions
 
 
 def search_proteins(target_sequence):
@@ -23,23 +47,7 @@ def search_proteins(target_sequence):
 
     for record in parse(fasta_file, "fasta"):
         sequence_str = str(record.seq)
-        start_index = 0
-        match_positions = []
-
-        while True:
-            # Find the target sequence starting from the current search position
-            start_index = sequence_str.find(target_sequence, start_index)
-
-            if start_index == -1:
-                break
-            else:
-                # Adjust for 1-based indexing
-                start_index_1_based = start_index + 1
-                end_index_1_based = start_index + len(
-                    target_sequence
-                )  # No need to subtract 1 before appending
-                match_positions.append(f"{start_index_1_based} - {end_index_1_based}")
-                start_index += 1
+        match_positions = match_protein_sequence(target_sequence, sequence_str)
 
         if match_positions:
             matching_proteins.append(
@@ -57,11 +65,18 @@ def search_proteins(target_sequence):
 class SequenceAnalysisViewset(View):
 
     def post(self, request, *args, **kwargs):
+
         input_sequence = json.loads(request.body.decode("utf-8")).get(
             "inputSequence", ""
         )
 
         if input_sequence:
+            if request.user.is_authenticated:
+                SearchHistory.objects.create(
+                    user=request.user,
+                    query=input_sequence,
+                    results=json.dumps(protein_result),
+                )
             try:
                 protein_result = search_proteins(input_sequence)
                 return JsonResponse({"result": str(protein_result)})
@@ -86,9 +101,18 @@ class CreateUserViewset(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class ExampleView(APIView):
-    permission_classes = [IsAuthenticated]
+class CustomAuthViewset(ObtainAuthToken):
 
-    def get(self, request, format=None):
-        content = {"message": "Hello, World!"}
-        return Response(content)
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(
+            data=request.data, context={"request": request}
+        )
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data["user"]
+        token, _ = Token.objects.get_or_create(user=user)
+        search_history = SearchHistory.objects.filter(user=user).values(
+            "query", "results", "timestamp"
+        )
+
+        # Include user's search history in the response
+        return Response({"token": token.key, "search_history": list(search_history)})
