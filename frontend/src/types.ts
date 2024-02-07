@@ -1,6 +1,7 @@
 export interface Protein {
   name: string
   id: string
+  match_indices: string
 }
 
 export interface AuthData {
