@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { Protein } from "../types"
 import axios from "axios"
-import SequenceForm from "./SequenceForm"
+import SequenceForm from "./forms/SequenceForm"
 import SequenceAnalysisResults from "./SequenceAnalysisResults"
 
 const SequenceAnalysisContainer = () => {

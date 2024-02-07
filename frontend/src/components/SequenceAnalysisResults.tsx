@@ -1,5 +1,7 @@
 import { useEffect } from "react"
 import { Protein } from "../types"
+import { ResultCard } from "./cards/ResultCard"
+import { ResultContainerCard } from "./cards/ResultContainerCard"
 
 interface SequenceAnalysisResultsProps {
   response: Protein[]
@@ -16,22 +18,11 @@ const SequenceAnalysisResults = ({
 
   return (
     <div>
-      {/* todo: Create:
-            - UI when no results exist yet
-            - UI when loading (clear form and list a new card with a loading symbol)
-            - UI to display results
-            - Container for result history */}
-      <p>{inputSequence} is found in...</p>
-      <ul>
-        {response ? (
-          response.map((protein, index) => (
-            <li key={index}>
-              {/* todo: Create expandable/collapsable boundaries for extremely long lists of results */}
-              {/* todo: Create message if no results */}
-              {protein.name} {protein.match_indices}
-            </li>
-          ))) : (<p>No match found</p>)}
-      </ul>
+      <ResultContainerCard
+        searchQuery={inputSequence}
+        results={response}
+        defaultExpanded={true}
+      />
     </div>
   )
 }
