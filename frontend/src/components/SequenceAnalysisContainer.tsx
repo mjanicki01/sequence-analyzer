@@ -5,11 +5,21 @@ import SequenceForm from "./SequenceForm"
 import SequenceAnalysisResults from "./SequenceAnalysisResults"
 
 const SequenceAnalysisContainer = () => {
-  const [sequence, setSequence] = useState<string>("")
+  const [inputSequence, setInputSequence] = useState<string>("")
   const [response, setResponse] = useState<Protein[]>([])
+  const [errorMessage, setErrorMessage] = useState("")
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSequence(e.target.value)
+    const lastChar = e.target.value.slice(-1).toUpperCase()
+    const isValidChar = /^[ATCG]$/.test(lastChar)
+
+    if (isValidChar || e.target.value === "") {
+      setInputSequence(e.target.value.toUpperCase())
+      setErrorMessage("")
+    } else {
+      setErrorMessage(`${lastChar} is an invalid character`)
+      e.target.value.slice(-1)
+    }
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -18,12 +28,12 @@ const SequenceAnalysisContainer = () => {
     try {
       const res = await axios.post(
         "http://localhost:8000/api/sequence-analysis/",
-        { sequence }
+        { inputSequence }
       )
+      setErrorMessage("")
       setResponse(JSON.parse(res.data.result.replace(/'/g, '"')))
     } catch (error) {
       console.error(error)
-      // return something to display to user
     }
   }
 
@@ -31,11 +41,15 @@ const SequenceAnalysisContainer = () => {
     <div>
       <h1>Submit Sequence</h1>
       <SequenceForm
-        sequence={sequence}
+        inputSequence={inputSequence}
         handleInputChange={handleInputChange}
         handleSubmit={handleSubmit}
+        errorMessage={errorMessage}
       />
-      <SequenceAnalysisResults response={response} />
+      <SequenceAnalysisResults
+        response={response}
+        inputSequence={inputSequence}
+      />
     </div>
   )
 }
