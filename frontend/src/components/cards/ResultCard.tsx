@@ -3,18 +3,16 @@ import { Protein } from "../../types"
 
 interface ResultCardProps {
   result: Protein
-  defaultExpanded?: boolean
 }
 
 // Individual search result card
 export const ResultCard = ({
   result,
-  defaultExpanded = false,
 }: ResultCardProps) => {
-  const [expanded, setExpanded] = useState(defaultExpanded)
+  const [expanded, setExpanded] = useState(false)
   const [showFullMatches, setShowFullMatches] = useState(false)
 
-  const toggleExpanded = () => setExpanded(!expanded)
+  const toggleExpanded = () => setExpanded((prev) => !prev)
   const toggleShowFullMatches = () => setShowFullMatches(!showFullMatches)
 
   const truncateMatches = (matches: string) => {

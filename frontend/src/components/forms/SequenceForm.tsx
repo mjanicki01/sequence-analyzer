@@ -23,7 +23,8 @@ const SequenceForm = ({ onSubmit }: SequenceFormProps) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    onSubmit(inputSequence)
+    const trimmedInputSequence = inputSequence.replace(/\s+/g, "")
+    onSubmit(trimmedInputSequence)
     setErrorMessage("")
     setInputSequence("")
   }

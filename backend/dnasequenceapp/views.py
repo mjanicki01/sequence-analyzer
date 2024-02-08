@@ -122,6 +122,15 @@ class CustomAuthViewset(ObtainAuthToken):
         user = serializer.validated_data["user"]
         token, _ = Token.objects.get_or_create(user=user)
 
+        # Store search history generated while not logged in, if provided
+        search_history = request.data.get("search_history", [])
+        for item in search_history:
+            SearchHistory.objects.create(
+                user=user,
+                query=item["query"],
+                results=json.dumps(item["results"]),
+            )
+
         search_history_qs = SearchHistory.objects.filter(user=user).values(
             "query", "results", "timestamp"
         )

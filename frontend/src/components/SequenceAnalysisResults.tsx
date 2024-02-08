@@ -5,25 +5,28 @@ interface SequenceAnalysisResultsProps {
   response: Protein[]
   inputSequence: string
   isLoading?: boolean
+  error?: string
 }
 
 const SequenceAnalysisResults = ({
   response,
   inputSequence,
   isLoading,
+  error,
 }: SequenceAnalysisResultsProps) => {
   return (
     <div>
       {isLoading ? (
         <div>Loading...</div>
+      ) : error ? (
+        <ResultContainerCard
+          searchQuery={inputSequence}
+          results={[]}
+          errorMessage={error}
+        />
       ) : (
-        inputSequence &&
-        response.length > 0 && (
-          <ResultContainerCard
-            searchQuery={inputSequence}
-            results={response}
-            defaultExpanded={true}
-          />
+        inputSequence && (
+          <ResultContainerCard searchQuery={inputSequence} results={response} />
         )
       )}
     </div>

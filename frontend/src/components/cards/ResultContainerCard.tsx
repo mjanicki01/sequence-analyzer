@@ -5,36 +5,62 @@ import { ResultCard } from "./ResultCard"
 interface ResultCardProps {
   searchQuery: string
   results: Protein[]
-  defaultExpanded?: boolean
+  errorMessage?: string
 }
 
 // Container of search results per DNA sequence search
 export const ResultContainerCard = ({
   searchQuery,
   results,
-  defaultExpanded = false,
+  errorMessage,
 }: ResultCardProps) => {
-  const [expanded, setExpanded] = useState(defaultExpanded)
+  const [expanded, setExpanded] = useState(false)
+  const [dialogOpen, setDialogOpen] = useState(false)
+  const showToggle = results.length > 0
 
-  const toggleExpanded = () => setExpanded(!expanded)
+  const truncatedQueryLength = 50
+  const isTruncated = searchQuery.length > truncatedQueryLength
+  const displayQuery = isTruncated
+    ? `${searchQuery.substring(0, truncatedQueryLength)}...`
+    : searchQuery
+
+  const handleClick = () => {
+    if (showToggle) {
+      setExpanded(!expanded)
+    }
+  }
+
+  const handleDialogToggle = () => {
+    setDialogOpen(!dialogOpen)
+  }
 
   return (
     <div className="card">
-      <div className="card-header" onClick={toggleExpanded}>
-        <span style={{ fontWeight: 600, color: "navy" }}>{searchQuery}</span>{" "}
-        <span>is found in...</span>
-        <span>{expanded ? "-" : "+"}</span>
+      <div className="card-header" onClick={handleClick}>
+        <span style={{ fontWeight: 600, color: "navy" }}>
+          {displayQuery}
+          {isTruncated && (
+            <span className="show-more" onClick={handleDialogToggle}>
+              [...]
+            </span>
+          )}
+        </span>
+        <span>{results.length > 0 ? "is found in..." : "No match found"}</span>
+        {showToggle && <span>{expanded ? "-" : "+"}</span>}
       </div>
       {expanded &&
-        (
-          results && results.length > 0 ? (
-            results.map((protein, index) => (
-              <ResultCard key={index} result={protein} />
-            ))
-          ) : (
-            <p className="card-content">No match found</p>
-          )
-        )}
+        !errorMessage &&
+        results.map((protein, index) => (
+          <ResultCard key={index} result={protein} />
+        ))}
+      {errorMessage && (
+        <div className="card-content">Error: {errorMessage}</div>
+      )}
+      <dialog open={dialogOpen} className="dialog-box">
+        <p>Sequence Search Query:</p>
+        <p>{searchQuery}</p>
+        <button onClick={handleDialogToggle}>Close</button>
+      </dialog>
     </div>
   )
 }
