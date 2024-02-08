@@ -16,8 +16,6 @@ export const ResultContainerCard = ({
 }: ResultCardProps) => {
   const [expanded, setExpanded] = useState(defaultExpanded)
 
-  console.log("results:")
-  console.log(results)
   const toggleExpanded = () => setExpanded(!expanded)
 
   return (
