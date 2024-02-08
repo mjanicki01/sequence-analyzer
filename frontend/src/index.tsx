@@ -1,8 +1,10 @@
-import "./index.css"
+import "./styles.css"
 import React from "react"
 import ReactDOM from "react-dom/client"
 import { RouterProvider } from "react-router-dom"
 import { DNASequenceRouter } from "./Router"
+import { AuthProvider } from "./context/AuthContext"
+import { SearchProvider } from "./context/SearchContext"
 
 const rootElement = document.getElementById("root")
 if (rootElement) {
@@ -10,7 +12,11 @@ if (rootElement) {
 
   root.render(
     <React.StrictMode>
-      <RouterProvider router={DNASequenceRouter} />
+      <AuthProvider>
+        <SearchProvider>
+          <RouterProvider router={DNASequenceRouter} />
+        </SearchProvider>
+      </AuthProvider>
     </React.StrictMode>
   )
 }

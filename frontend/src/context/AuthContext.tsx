@@ -7,7 +7,8 @@ interface AuthContextType {
 }
 
 const defaultAuthData: AuthData = {
-  isAuthenticated: false,
+  token: "",
+  username: "",
 }
 
 export const AuthContext = createContext<AuthContextType>({
