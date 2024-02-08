@@ -1,6 +1,5 @@
 import { useEffect } from "react"
 import { Protein } from "../types"
-import { ResultCard } from "./cards/ResultCard"
 import { ResultContainerCard } from "./cards/ResultContainerCard"
 
 interface SequenceAnalysisResultsProps {
@@ -18,11 +17,13 @@ const SequenceAnalysisResults = ({
 
   return (
     <div>
-      <ResultContainerCard
-        searchQuery={inputSequence}
-        results={response}
-        defaultExpanded={true}
-      />
+      {inputSequence && response.length > 0 && (
+        <ResultContainerCard
+          searchQuery={inputSequence}
+          results={response}
+          defaultExpanded={true}
+        />
+      )}
     </div>
   )
 }

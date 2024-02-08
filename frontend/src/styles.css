@@ -1,8 +1,16 @@
 body {
   font-family: Arial, sans-serif;
   margin: 0;
-  padding: 20px;
+  padding: 40px;
   background-color: #f4f4f4;
+}
+
+.upper-right-corner {
+  color: darkgray;
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 10px;
 }
 
 .container {
@@ -13,18 +21,18 @@ body {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.form-group {
+form {
+  align-items: center;
   margin-bottom: 20px;
 }
 
-.form-group label {
+label {
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
 }
 
-.form-group input[type="text"],
-.form-group input[type="password"] {
-  width: 100%;
+input {
+  width: 95%;
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 4px;
@@ -49,46 +57,75 @@ button:hover {
 }
 
 .card {
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.card.sub {
   background-color: #f9f9f9;
+  margin: 10px;
+  padding: 10px;
+  border-left: 4px solid #eedbfe;
 }
 
 .card-header {
   padding: 10px;
   background-color: #eee;
-  border-bottom: 1px solid #ddd;
   display: flex;
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
+  flex-wrap: nowrap;
+}
+
+.card-header span {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-header span:first-child {
+  flex-grow: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-header span:nth-child(2) {
+  white-space: nowrap;
+  min-width: 20%;
+}
+
+.card-header span:nth-child(3) {
+  min-width: 10px;
 }
 
 .card-content {
   padding: 10px;
-  display: none;
+}
+
+.card-content p {
+  margin: 5px 0px 5px 0px;
 }
 
 .card-content.expanded {
   display: block;
 }
 
-.truncated {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 90%;
-}
-
-.card-footer {
-  padding: 10px;
-  text-align: right;
-  background-color: #eee;
-  border-top: 1px solid #ddd;
-}
-
-.show-more {
+.show-more,
+a {
   cursor: pointer;
-  color: #0066cc;
+  color: #007bff;
+  text-decoration: underline;
+  display: inline;
+  margin: 0px 2px 0px 2px;
 }

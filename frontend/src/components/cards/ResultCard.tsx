@@ -19,26 +19,30 @@ export const ResultCard = ({
 
   const truncateMatches = (matches: string) => {
     if (showFullMatches || matches.length <= 50) return matches
-    return matches.substring(0, 50) + "..."
+    return matches.substring(0, 70) + "..."
   }
 
   return (
-    <div className="card">
-      <div className="card-header" onClick={toggleExpanded}>
+    <div className="card sub">
+      <div className="card-header" id="sub" onClick={toggleExpanded}>
         <span>{result.name}</span>
+        <span></span>
         <span>{expanded ? "-" : "+"}</span>
       </div>
       {expanded && (
-        <div className="card-content expanded">
+        <div className="card-content">
           <p>ID: {result.id}</p>
+          <span style={{ display: "flex", justifyContent: "space-between" }}>
+            <p>Matches:</p>{" "}
+            {result.match_indices.length > 50 && (
+              <p className="show-more" onClick={toggleShowFullMatches}>
+                {showFullMatches ? "Show Less" : "Show More"}
+              </p>
+            )}
+          </span>
           <p className={showFullMatches ? "" : "truncated"}>
-            Matches: {truncateMatches(result.match_indices)}
+            {truncateMatches(result.match_indices)}
           </p>
-          {result.match_indices.length > 50 && (
-            <div className="show-more" onClick={toggleShowFullMatches}>
-              {showFullMatches ? "Show Less" : "Show More"}
-            </div>
-          )}
         </div>
       )}
     </div>

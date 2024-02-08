@@ -24,20 +24,27 @@ const Registration = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        name="username"
-        placeholder="Username"
-        value={userData.username}
-        onChange={handleChange}
-      />
-      <input
-        type="password"
-        name="password"
-        placeholder="Password"
-        value={userData.password}
-        onChange={handleChange}
-      />
+      <h3>Register</h3>
+      <label>
+        Username:
+        <input
+          type="text"
+          name="username"
+          placeholder="Username"
+          value={userData.username}
+          onChange={handleChange}
+        />
+      </label>
+      <label>
+        Password:
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          value={userData.password}
+          onChange={handleChange}
+        />
+      </label>
       <button type="submit">Register</button>
     </form>
   )

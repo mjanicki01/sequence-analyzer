@@ -15,26 +15,30 @@ export const ResultContainerCard = ({
   defaultExpanded = false,
 }: ResultCardProps) => {
   const [expanded, setExpanded] = useState(defaultExpanded)
+  //   const [showFullQuery, setShowFullQuery] = useState(false)
 
   const toggleExpanded = () => setExpanded(!expanded)
+
+  //   const truncateQuery = (query: string) => {
+  //     if (showFullQuery || query.length <= 50) return query
+  //     return query.substring(0, 50) + "..."
+  //   }
 
   return (
     <div className="card">
       <div className="card-header" onClick={toggleExpanded}>
-        <span>{searchQuery} is found in...</span>
+        <span style={{ fontWeight: 600, color: "navy" }}>{searchQuery}</span>{" "}
+        <span>is found in...</span>
         <span>{expanded ? "-" : "+"}</span>
       </div>
-      {results ? (
-        expanded &&
-        results.map((protein, index) => (
-          <ResultCard result={protein} defaultExpanded={true} />
-        )) // when it's a new search result, expand=true; If it's from search history, expand=false
-      ) : (
-        <p>No match found</p>
-      )}
-      <div className="card-footer">
-        <span>Date: 234234324</span>
-      </div>
+      {expanded &&
+        (results && results.length > 0 ? (
+          results.map((protein, index) => (
+            <ResultCard key={index} result={protein} defaultExpanded={true} />
+          ))
+        ) : (
+          <p className="card-content">No match found</p>
+        ))}
     </div>
   )
 }
