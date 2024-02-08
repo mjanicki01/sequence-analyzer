@@ -1,55 +1,52 @@
-import React, { useState } from "react"
-import { Protein } from "../types"
-import axios from "axios"
+import { useContext, useEffect } from "react"
+import { SearchContext } from "../context/SearchContext"
 import SequenceForm from "./forms/SequenceForm"
 import SequenceAnalysisResults from "./SequenceAnalysisResults"
+import axios from "axios"
+import { AuthContext } from "../context/AuthContext"
 
 const SequenceAnalysisContainer = () => {
-  const [inputSequence, setInputSequence] = useState<string>("")
-  const [response, setResponse] = useState<Protein[]>([])
-  const [errorMessage, setErrorMessage] = useState("")
+  const { searchData, setSearchData } = useContext(SearchContext)
+  const { authData } = useContext(AuthContext)
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const lastChar = e.target.value.slice(-1).toUpperCase()
-    const isValidChar = /^[ATCG]$/.test(lastChar)
-
-    if (isValidChar || e.target.value === "") {
-      setInputSequence(e.target.value.toUpperCase())
-      setErrorMessage("")
-    } else {
-      setErrorMessage(`${lastChar} is an invalid character`)
-      e.target.value.slice(-1)
-    }
-  }
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-
+  const handleSubmit = async (inputSequence: string) => {
     try {
-      const res = await axios.post(
+      const response = await axios.post(
         "http://localhost:8000/api/sequence-analysis/",
-        { inputSequence }
+        { query: inputSequence },
+        {
+          headers: {
+            Authorization: `Token ${authData.token}`,
+          },
+        }
       )
-      setErrorMessage("")
-      setResponse(JSON.parse(res.data.result.replace(/'/g, '"')))
+      setSearchData([
+        {
+          query: inputSequence,
+          results: response.data.results,
+        },
+        ...searchData,
+      ])
     } catch (error) {
       console.error(error)
     }
   }
 
+  useEffect(() => {
+    authData.search_history && setSearchData(authData.search_history)
+  }, [authData, setSearchData])
+
   return (
     <div>
       <h1>Submit Sequence</h1>
-      <SequenceForm
-        inputSequence={inputSequence}
-        handleInputChange={handleInputChange}
-        handleSubmit={handleSubmit}
-        errorMessage={errorMessage}
-      />
-      <SequenceAnalysisResults
-        response={response}
-        inputSequence={inputSequence}
-      />
+      <SequenceForm onSubmit={handleSubmit} />
+      {searchData.map((searchQuery, index) => (
+        <SequenceAnalysisResults
+          key={index}
+          inputSequence={searchQuery.query}
+          response={searchQuery.results}
+        />
+      ))}
     </div>
   )
 }

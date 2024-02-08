@@ -3,7 +3,7 @@ import { Protein } from "../../types"
 
 interface ResultCardProps {
   result: Protein
-  defaultExpanded: boolean
+  defaultExpanded?: boolean
 }
 
 // Individual search result card

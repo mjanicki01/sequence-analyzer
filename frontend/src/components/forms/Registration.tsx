@@ -1,22 +1,36 @@
-import { useState } from "react"
+import { useContext, useState } from "react"
 import axios from "axios"
+import { AuthContext } from "../../context/AuthContext"
+import { SearchContext } from "../../context/SearchContext"
 
 const Registration = () => {
-  const [userData, setUserData] = useState({ username: "", password: "" })
+  const { setAuthData } = useContext(AuthContext)
+  const { searchData } = useContext(SearchContext)
+  const [credentials, setCredentials] = useState({
+    username: "",
+    password: "",
+    search_history: [],
+  })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUserData({ ...userData, [e.target.name]: e.target.value })
+    setCredentials({
+      ...credentials,
+      [e.target.name]: e.target.value,
+    })
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     try {
-      const response = await axios.post(
-        "http://localhost:8000/api/register/",
-        userData
-      )
-      console.log(response.data)
-      // redirect user
+      const response = await axios.post("http://localhost:8000/api/register/", {
+        ...credentials,
+        search_history: searchData,
+      })
+      setAuthData({
+        token: response.data.token,
+        username: response.data.username,
+        search_history: response.data.search_history,
+      })
     } catch (error) {
       console.error(error)
     }
@@ -31,7 +45,7 @@ const Registration = () => {
           type="text"
           name="username"
           placeholder="Username"
-          value={userData.username}
+          value={credentials.username}
           onChange={handleChange}
         />
       </label>
@@ -41,7 +55,7 @@ const Registration = () => {
           type="password"
           name="password"
           placeholder="Password"
-          value={userData.password}
+          value={credentials.password}
           onChange={handleChange}
         />
       </label>

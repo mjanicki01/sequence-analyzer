@@ -4,7 +4,7 @@ import { ResultCard } from "./ResultCard"
 
 interface ResultCardProps {
   searchQuery: string
-  results?: Protein[]
+  results: Protein[]
   defaultExpanded?: boolean
 }
 
@@ -15,14 +15,10 @@ export const ResultContainerCard = ({
   defaultExpanded = false,
 }: ResultCardProps) => {
   const [expanded, setExpanded] = useState(defaultExpanded)
-  //   const [showFullQuery, setShowFullQuery] = useState(false)
 
+  console.log("results:")
+  console.log(results)
   const toggleExpanded = () => setExpanded(!expanded)
-
-  //   const truncateQuery = (query: string) => {
-  //     if (showFullQuery || query.length <= 50) return query
-  //     return query.substring(0, 50) + "..."
-  //   }
 
   return (
     <div className="card">
@@ -32,13 +28,15 @@ export const ResultContainerCard = ({
         <span>{expanded ? "-" : "+"}</span>
       </div>
       {expanded &&
-        (results && results.length > 0 ? (
-          results.map((protein, index) => (
-            <ResultCard key={index} result={protein} defaultExpanded={true} />
-          ))
-        ) : (
-          <p className="card-content">No match found</p>
-        ))}
+        (
+          results && results.length > 0 ? (
+            results.map((protein, index) => (
+              <ResultCard key={index} result={protein} />
+            ))
+          ) : (
+            <p className="card-content">No match found</p>
+          )
+        )}
     </div>
   )
 }

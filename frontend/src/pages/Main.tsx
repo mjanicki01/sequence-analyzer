@@ -1,31 +1,55 @@
-import { useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import Login from "../components/forms/Login"
 import Registration from "../components/forms/Registration"
 import SequenceAnalysisContainer from "../components/SequenceAnalysisContainer"
-
-// 2)  If logged in,
-//     -> Display username somewhere
-//     -> Display result history
-
+import { AuthContext } from "../context/AuthContext"
+import axios from "axios"
 
 export const MainPage = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false) // placeholder for authentication state
+  const NIHCOLLECTION =
+    "https://www.ncbi.nlm.nih.gov/sites/myncbi/magda.janicki.1/collections/63742707/public/"
+  const { authData, setAuthData } = useContext(AuthContext)
+  const [isLoggedIn, setIsLoggedIn] = useState(!!authData.token)
   const [expanded, setExpanded] = useState(false)
 
   const toggleExpanded = () => setExpanded(!expanded)
 
-  const NIHCOLLECTION =
-    "https://www.ncbi.nlm.nih.gov/sites/myncbi/magda.janicki.1/collections/63742707/public/"
-
-  const handleLogout = () => {
-    // send request & update useContext object
-    setIsLoggedIn(false)
-    return
+  const handleLogout = async () => {
+    try {
+      await axios.post(
+        "http://localhost:8000/api/logout/",
+        {},
+        {
+          headers: {
+            Authorization: `Token ${authData.token}`,
+          },
+        }
+      )
+      setAuthData({
+        token: "",
+        username: "",
+        search_history: [],
+      })
+      setIsLoggedIn(false)
+    } catch (error) {
+      console.error(error)
+    }
   }
+
+  useEffect(() => {
+    authData.token && setIsLoggedIn(true)
+  }, [authData])
 
   return (
     <>
-      <div className="upper-right-corner">Logged in as {}. Logout</div>
+      {isLoggedIn && (
+        <div className="upper-right-corner">
+          Logged in as {authData.username}
+          <span className="show-more" onClick={handleLogout}>
+            Logout
+          </span>
+        </div>
+      )}
       <div className="container">
         <SequenceAnalysisContainer />
         <div className="auth-message">
@@ -47,7 +71,6 @@ export const MainPage = () => {
           {!isLoggedIn && expanded && <Registration />}
           {!isLoggedIn && expanded && <Login />}
         </div>
-        {isLoggedIn && <button onClick={handleLogout}>Log out</button>}
       </div>
     </>
   )

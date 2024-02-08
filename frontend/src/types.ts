@@ -5,10 +5,12 @@ export interface Protein {
 }
 
 export interface AuthData {
-  isAuthenticated: boolean
-  token?: string
-  user?: {
-    username: string
-    // user's search history
-  }
+  token: string
+  username: string
+  search_history?: SearchQuery[]
+}
+
+export interface SearchQuery {
+  query: string
+  results: Protein[]
 }

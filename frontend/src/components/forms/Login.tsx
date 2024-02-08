@@ -1,10 +1,12 @@
-import { useState, useContext } from "react"
+import { useState, useContext, useEffect } from "react"
 import axios from "axios"
 import { AuthContext } from "../../context/AuthContext"
+import { SearchContext } from "../../context/SearchContext"
 
 const Login = () => {
-  const [credentials, setCredentials] = useState({ username: "", password: "" })
   const { setAuthData } = useContext(AuthContext)
+  const { setSearchData } = useContext(SearchContext)
+  const [credentials, setCredentials] = useState({ username: "", password: "" })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value })
@@ -17,8 +19,12 @@ const Login = () => {
         "http://localhost:8000/api/login/",
         credentials
       )
-      setAuthData(response.data.token)
-      //  redirect
+      setAuthData({
+        token: response.data.token,
+        username: response.data.username,
+        search_history: response.data.search_history,
+      })
+      setSearchData(response.data.search_history)
     } catch (error) {
       console.error(error)
     }
