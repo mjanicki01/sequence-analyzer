@@ -1,16 +1,11 @@
 import { createContext, useState, ReactNode } from "react"
 import { SearchQuery } from "../types"
 
-const defaultSearchData: SearchQuery[] = [
-  {
-    query: "",
-    results: [],
-  },
-]
+const defaultSearchData: SearchQuery[] = []
 
 interface SearchContextType {
   searchData: SearchQuery[]
-  setSearchData: (data: SearchQuery[]) => void
+  setSearchData: (value: React.SetStateAction<SearchQuery[]>) => void
 }
 
 export const SearchContext = createContext<SearchContextType>({

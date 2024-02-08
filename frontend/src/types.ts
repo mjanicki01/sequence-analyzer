@@ -13,4 +13,6 @@ export interface AuthData {
 export interface SearchQuery {
   query: string
   results: Protein[]
+  isLoading?: boolean
+  error?: string
 }

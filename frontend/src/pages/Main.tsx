@@ -40,6 +40,26 @@ export const MainPage = () => {
     authData.token && setIsLoggedIn(true)
   }, [authData])
 
+  const welcomeMessage = () => {
+    return (
+      <div className="auth-message">
+        Welcome! Enter a DNA sequence to see if exists within
+        <a href={NIHCOLLECTION} target="blank">
+          this collection
+        </a>
+        of proteins.
+        {!isLoggedIn && (
+          <>
+            <span className="show-more" onClick={toggleExpanded}>
+              Register or login
+            </span>
+            {" to save your search history."}
+          </>
+        )}
+      </div>
+    )
+  }
+
   return (
     <>
       {isLoggedIn && (
@@ -51,22 +71,8 @@ export const MainPage = () => {
         </div>
       )}
       <div className="container">
+        {welcomeMessage()}
         <SequenceAnalysisContainer />
-        <div className="auth-message">
-          Welcome! Enter a DNA sequence to see if exists within
-          <a href={NIHCOLLECTION} target="blank">
-            this collection
-          </a>
-          of proteins.
-          {!isLoggedIn && (
-            <>
-              <span className="show-more" onClick={toggleExpanded}>
-                Register or login
-              </span>
-              {" to save your search history."}
-            </>
-          )}
-        </div>
         <div style={{ display: "flex", gap: "32px" }}>
           {!isLoggedIn && expanded && <Registration />}
           {!isLoggedIn && expanded && <Login />}

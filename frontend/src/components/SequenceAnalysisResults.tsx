@@ -4,20 +4,30 @@ import { ResultContainerCard } from "./cards/ResultContainerCard"
 interface SequenceAnalysisResultsProps {
   response: Protein[]
   inputSequence: string
+  isLoading?: boolean
+  error?: string
 }
 
 const SequenceAnalysisResults = ({
   response,
   inputSequence,
+  isLoading,
+  error,
 }: SequenceAnalysisResultsProps) => {
   return (
     <div>
-      {inputSequence && response.length > 0 && (
+      {isLoading ? (
+        <div>Loading...</div>
+      ) : error ? (
         <ResultContainerCard
           searchQuery={inputSequence}
-          results={response}
-          defaultExpanded={true}
+          results={[]}
+          errorMessage={error}
         />
+      ) : (
+        inputSequence && (
+          <ResultContainerCard searchQuery={inputSequence} results={response} />
+        )
       )}
     </div>
   )
