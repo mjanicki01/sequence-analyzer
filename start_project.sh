@@ -21,9 +21,10 @@ setup_frontend() {
 
 start_services() {
     echo "Starting services..."
+    VENV_ACTIVATE="venv/Scripts/activate"
     # Start backend
     cd backend
-    source venv/bin/activate
+    source $VENV_ACTIVATE
     python manage.py runserver &
     cd ..
     # Start frontend

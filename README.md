@@ -1,21 +1,17 @@
 # DNA Sequence Analyzer
 
-This form analyzes if a DNA sequence string exists within a specific collection of proteins.
+This form analyzes if a DNA sequence string exists within a specific [collection of proteins](https://www.ncbi.nlm.nih.gov/sites/myncbi/magda.janicki.1/collections/63742707/public/).
 
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine.
 
-## Prerequisites
-
-What you need to install the software and how to install them:
+### Prerequisites
 
 - Python (with pip)
 - Node.js and npm
 
-## Installation
-
-A step-by-step series of examples that tell you how to get a development environment running.
+### Installation
 
 1. Clone the repository
 2. Navigate to the project directory
@@ -24,6 +20,7 @@ A step-by-step series of examples that tell you how to get a development environ
 chmod +x start_project.sh
 ./start_project.sh --setup
 ```
+Note: You may need to change the `VENV_ACTIVATE` variable depending on how your OS configures the paths for your virtual environment
 
 This script will set up the environment for both the frontend and backend. It installs necessary packages, applies Django migrations, and starts both the Django server and React development server.
 
