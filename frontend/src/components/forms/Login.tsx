@@ -11,6 +11,7 @@ const Login = () => {
     password: "",
     search_history: [],
   })
+  const [errorMessage, setErrorMessage] = useState("")
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value })
@@ -30,7 +31,15 @@ const Login = () => {
       })
       setSearchData(response.data.search_history)
     } catch (error) {
-      console.error(error)
+      if (axios.isAxiosError(error) && error.response) {
+        const firstErrorMessage = Object.values(error.response.data)[0]
+        const errorMessage = Array.isArray(firstErrorMessage)
+          ? firstErrorMessage[0]
+          : "Unknown error"
+        setErrorMessage(errorMessage)
+      } else if (error instanceof Error) {
+        setErrorMessage(error.message)
+      }
     }
   }
 
@@ -58,6 +67,7 @@ const Login = () => {
         />
       </label>
       <button type="submit">Login</button>
+      {errorMessage && <div style={{ color: "red" }}>{errorMessage}</div>}
     </form>
   )
 }

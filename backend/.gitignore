@@ -15,3 +15,5 @@ __pycache__
 
 # Management Command Generated Files
 /static
+
+.env

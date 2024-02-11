@@ -11,6 +11,7 @@ const Registration = () => {
     password: "",
     search_history: [],
   })
+  const [errorMessage, setErrorMessage] = useState("")
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCredentials({
@@ -32,7 +33,15 @@ const Registration = () => {
         search_history: response.data.search_history,
       })
     } catch (error) {
-      console.error(error)
+      if (axios.isAxiosError(error) && error.response) {
+        const firstErrorMessage = Object.values(error.response.data)[0]
+        const errorMessage = Array.isArray(firstErrorMessage)
+          ? firstErrorMessage[0]
+          : "Unknown error"
+        setErrorMessage(errorMessage)
+      } else if (error instanceof Error) {
+        setErrorMessage(error.message)
+      }
     }
   }
 
@@ -59,6 +68,7 @@ const Registration = () => {
           onChange={handleChange}
         />
       </label>
+      {errorMessage && <div style={{ color: "red" }}>{errorMessage}</div>}
       <button type="submit">Register</button>
     </form>
   )

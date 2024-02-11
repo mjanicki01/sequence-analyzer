@@ -36,8 +36,6 @@ const SequenceAnalysisContainer = () => {
         )
       )
     } catch (error) {
-      console.error(error)
-      // Handle error by updating the respective query's loading state and optionally storing the error message
       setSearchData((prevData) =>
         prevData.map((item) =>
           item.query === inputSequence
