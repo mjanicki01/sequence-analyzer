@@ -40,12 +40,12 @@ chmod +x start_project.sh
 
 *Note:*
 - If a port is already in use when starting the project, exit the script and try the following to clear any workers. This might happen while trouble-shooting setup:
-    Powershell:
-  - `Stop-Process -Name "python" -Force` (backend)
-  - `Stop-Process -Name "node" -Force` (frontend)
-    Bash:
-  - `pkill -f node` (backend)
-  - `pkill -f python` (frontend)
+  - Powershell:
+    - `Stop-Process -Name "python" -Force` (backend)
+    - `Stop-Process -Name "node" -Force` (frontend)
+  - Bash:
+    - `pkill -f node` (backend)
+    - `pkill -f python` (frontend)
 
 
 ## Usage
